@@ -19,7 +19,6 @@ for main in mainList :
     soup = BeautifulSoup(html)
     while True:
         try:
-#            print soup.find ('a' , {'class','mdEndView01Pagination01Next'})['href']
             urlList.append(soup.find('a' , {'class','mdEndView01Pagination01Next'})['href'])
             html = urllib2.urlopen(urlList[num])
             soup = BeautifulSoup(html)
