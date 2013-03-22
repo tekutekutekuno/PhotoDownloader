@@ -36,6 +36,7 @@ def SaveImgList(imageList):
     for image in imageList:
         print 'get:%s' % (image)
         home = os.environ['HOME']
+
         output_dir = os.path.join(home, 'Pictures')
         output_dir = os.path.join(output_dir, 'Photos')
         try:
