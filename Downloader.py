@@ -39,6 +39,18 @@ def SaveImgList(imageList):
         savefile = os.path.join(output_dir,os.path.basename(image))
         urllib.urlretrieve( image, savefile )
 
+        home = os.environ['HOME']
+        output_dir = os.path.join(home, 'Pictures')
+        output_dir = os.path.join(output_dir, 'Photos')
+        try:
+            savefile = os.path.join(output_dir,os.path.basename(image))
+            urllib.urlretrieve( image, savefile )
+        except:
+            os.mkdir(output_dir)
+            savefile = os.path.join(output_dir,os.path.basename(image))
+            urllib.urlretrieve( image, savefile )
+    print 'output %s' % output_dir
+
 
 mainList = []
 mainList.append('http://matome.naver.jp/odai/2136232246408838201/2136232643009992503')
