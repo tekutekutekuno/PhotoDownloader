@@ -2,6 +2,10 @@ from bs4 import BeautifulSoup
 import urllib2,urllib,sys
 import os.path
 
+def FlushText(text):
+    sys.stdout.write(text)
+    sys.stdout.flush()
+
 def AddUrlList(mainList):
     num = 0
     urlList = []
@@ -9,13 +13,16 @@ def AddUrlList(mainList):
         html = urllib2.urlopen(main)
         soup = BeautifulSoup(html)
         print 'Load URL'
+        urlList.append(main)
         while True:
             try:
-                urlList.append(soup.find('a' , {'class','mdEndView01Pagination01Next'})['href'])
+                FlushText('\r\t'+urlList[num])
                 html = urllib2.urlopen(urlList[num])
                 soup = BeautifulSoup(html)
+                urlList.append(soup.find('a' , {'class','mdEndView01Pagination01Next'})['href'])
                 num = num + 1
             except :
+                print '\nend'
                 break
     return urlList
 
@@ -23,37 +30,44 @@ def AddImgList(urlList):
     imageList = []
     print 'Load Image'
     for url in urlList:
+        FlushText('\r\t'+url)
         html = urllib2.urlopen(url)
         soup = BeautifulSoup(html)
         elements = soup.findAll('img')
         for e in elements:
             if ('jpg' in e['src']):
                 imageList.append(e['src'])
+    print '\nend'
     return imageList
 
 def SaveImgList(imageList):
-    
+    print 'Get Image'
     for image in imageList:
-        print 'get:%s' % (image)
+        FlushText('\r\t'+image)
         home = os.environ['HOME']
 
-        output_dir = os.path.join(home, 'Pictures')
-        output_dir = os.path.join(output_dir, 'Photos')
-        try:
-            savefile = os.path.join(output_dir,os.path.basename(image))
-            urllib.urlretrieve( image, savefile )
-        except:
-            os.mkdir(output_dir)
-            savefile = os.path.join(output_dir,os.path.basename(image))
-            urllib.urlretrieve( image, savefile )
-    print 'output %s' % output_dir
+        output_dir = os.path.join(home, 'Pictures', 'Photo')
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+            
+        savefile = os.path.join(output_dir,os.path.basename(image))
+        urllib.urlretrieve( image, savefile )
+    print '\noutput %s' % output_dir
 
-mainList = []
-mainList.append('http://matome.naver.jp/odai/2136232246408838201/2136232643009992503')
-#mainList.append('http://matome.naver.jp/odai/2136231874807871301/2136232181708614003')
-#mainList.append('http://matome.naver.jp/odai/2136231160605704601/2136231534806954603')
-#mainList.append('http://matome.naver.jp/odai/2134115119051056901/2134977195636793803')
-#mainList.append('http://matome.naver.jp/odai/2134134096564928801/2134976595736003003')
-#mainList.append('http://matome.naver.jp/odai/2134155293378664301/2134980511641314303')
+def main():
+    mainList = []
+    mainList.append('http://matome.naver.jp/odai/2136232246408838201/2136232643009992503')
+    #mainList.append('http://matome.naver.jp/odai/2136231874807871301/2136232181708614003')
+    #mainList.append('http://matome.naver.jp/odai/2136231160605704601/2136231534806954603')
+    #mainList.append('http://matome.naver.jp/odai/2134115119051056901/2134977195636793803')
+    #mainList.append('http://matome.naver.jp/odai/2134134096564928801/2134976595736003003')
+    #mainList.append('http://matome.naver.jp/odai/2134155293378664301/2134980511641314303')
+    
+    urlList = AddUrlList(mainList)
+    imageList = AddImgList(urlList)
+    SaveImgList(imageList)
 
-SaveImgList(AddImgList(AddUrlList(mainList)))
+
+if __name__ == '__main__':
+    main()
+
