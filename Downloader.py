@@ -42,16 +42,21 @@ def AddImgList(urlList):
 
 def SaveImgList(imageList):
     print 'Get Image'
+    home = os.environ['HOME']
+
+    output_dir = os.path.join(home, 'Pictures', 'Photo')
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    
     for image in imageList:
         FlushText('\r\t'+image)
-        home = os.environ['HOME']
-
-        output_dir = os.path.join(home, 'Pictures', 'Photo')
-        if not os.path.exists(output_dir):
-            os.makedirs(output_dir)
             
         savefile = os.path.join(output_dir,os.path.basename(image))
-        urllib.urlretrieve( image, savefile )
+        try:
+            urllib.urlretrieve( image, savefile )
+        except:
+            print 'no image...'
+            continue
     print '\noutput %s' % output_dir
 
 def main():
