@@ -19,7 +19,7 @@ def AddUrlList(mainList):
                 FlushText('\r\t'+urlList[num])
                 html = urllib2.urlopen(urlList[num])
                 soup = BeautifulSoup(html)
-                urlList.append(soup.find('a' , {'class','mdEndView01Pagination01Next'})['href'])
+                urlList.append(soup.find('a' , {'class','mdMTMEnd01Pagination01Next'})['href'])
                 num = num + 1
             except :
                 print '\nend'
