@@ -19,7 +19,7 @@ def AddUrlList(mainList):
                 FlushText('\r\t'+urlList[num])
                 html = urllib2.urlopen(urlList[num])
                 soup = BeautifulSoup(html)
-                urlList.append(soup.find('a' , {'class','mdEndView01Pagination01Next'})['href'])
+                urlList.append(soup.find('a' , {'class','mdMTMEnd01Pagination01Next'})['href'])
                 num = num + 1
             except :
                 print '\nend'
@@ -42,16 +42,21 @@ def AddImgList(urlList):
 
 def SaveImgList(imageList):
     print 'Get Image'
+    home = os.environ['HOME']
+
+    output_dir = os.path.join(home, 'Pictures', 'Photo')
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    
     for image in imageList:
         FlushText('\r\t'+image)
-        home = os.environ['HOME']
-
-        output_dir = os.path.join(home, 'Pictures', 'Photo')
-        if not os.path.exists(output_dir):
-            os.makedirs(output_dir)
             
         savefile = os.path.join(output_dir,os.path.basename(image))
-        urllib.urlretrieve( image, savefile )
+        try:
+            urllib.urlretrieve( image, savefile )
+        except:
+            print 'no image...'
+            continue
     print '\noutput %s' % output_dir
 
 def main():
